@@ -99,9 +99,7 @@
   </div>
 
 <script>
-  const inbox = document.querySelector(".inbox");
-  const itemsArr = Array.from(inbox.children);
-  const checkboxArr = itemsArr.map(item => item.firstElementChild);
+  const checkboxArr = Array.from(document.querySelectorAll('input[type="checkbox"]'));
   let isShiftPressed = false;
   let lastChangedCheckbox;
   let nowChangedCheckbox;
