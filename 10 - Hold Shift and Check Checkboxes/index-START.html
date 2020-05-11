@@ -114,10 +114,7 @@
     }
   );
   
-  checkboxArr.forEach(checkbox => checkbox.addEventListener("change", () => {
-    saveLast2Changed();
-    checkAllBetween()
-  }));
+  checkboxArr.forEach(checkbox => {checkbox.addEventListener("change", saveLast2Changed)});
   
   function saveLast2Changed() {
     if (this.checked) {
@@ -128,6 +125,8 @@
       nowChangedCheckbox = undefined;
     }
   }
+  
+  checkboxArr.forEach(checkbox => checkbox.addEventListener("change", checkAllBetween));
     
   function checkAllBetween() {
     if (isShiftPressed && lastChangedCheckbox != undefined) {
