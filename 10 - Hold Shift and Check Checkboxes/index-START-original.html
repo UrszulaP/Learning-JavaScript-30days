@@ -51,13 +51,11 @@
     }
   </style>
    <!--
-   - The following is a common layout you would see in an email client.
-   - When a user checkes a checkbox and then checkes another holding Shift a few rows down or up, 
-      all the checkboxes between those two checkboxes are checked.
-   - When many checkboxes are checked before and user checkes another holding Shift, 
-      only checkboxes between last checked and current checked are checked.
-   - When user uncheckes a checkbox holding Shift, no additional effect takes place.
-   - When user uncheckes a checkbox, and then checkes another holding Shift, no additional effect takes place.
+   The following is a common layout you would see in an email client.
+
+   When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+    
+    THIS SOLUTION DOESN`T HANDLE BEHAVIOR AFTER UNCHECKING CHECKBOXES 
   -->
   <div class="inbox">
     <div class="item">
@@ -99,44 +97,26 @@
   </div>
 
 <script>
-  const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"]'));
-  let lastCheckedCheckbox;
+  const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+  let lastChecked;
   
-  checkboxes.forEach(checkbox => checkbox.addEventListener("click", handleCheckboxClick));
+  checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck)); // click works also on keyboard while change not
   
-  function handleCheckboxClick(e) {
-    if (e.shiftKey && lastCheckedCheckbox != undefined && this.checked) {
-      checkAllBetween(this);
-    }
-    saveLastChanged(this);
-  }
-  
-  function saveLastChanged(checkbox) {
-    if (checkbox.checked) {
-      lastCheckedCheckbox = checkbox;
-    } else { // prevents checkAllBetween if last changed checkbox was unchecked
-      lastCheckedCheckbox = undefined;
-    }
-  }
-      
-  function checkAllBetween(nowCheckedCheckbox) {
-    let startIndex; // not defined in if block, because it would have scope only of this if block
-    let endIndex;
-    if (checkboxes.indexOf(lastCheckedCheckbox) > checkboxes.indexOf(nowCheckedCheckbox)) {// THIS SOLUTION LOOPS THROUGH THE CHECKBOXES ARRAY TWICE USING indexOf
-      startIndex = checkboxes.indexOf(nowCheckedCheckbox);
-      endIndex = checkboxes.indexOf(lastCheckedCheckbox);
-    } else {
-      startIndex = checkboxes.indexOf(lastCheckedCheckbox);
-      endIndex = checkboxes.indexOf(nowCheckedCheckbox);
+  function handleCheck(e) {
+    let inBetween = false;
+    if (e.shiftKey && this.checked) { // MouseEvent has a shiftKey property; this - checkbox
+      checkboxes.forEach(checkbox => { // THIS SOLUTION LOOPS THROUGH THE CHECKBOXES ARRAY ONCE
+        if (checkbox === this || checkbox === lastChecked) {
+          inBetween = !inBetween;
+        };
+        if (inBetween) {
+          checkbox.checked = true;
+        }
+      })
     }
     
-    for (checkbox of checkboxes.slice(startIndex + 1, endIndex)) {
-      checkbox.checked = true;
-    }
+    lastChecked = this; // THIS SOLUTION DOESN`T HANDLE UNCHECKING CHECKBOXES
   }
-  
-  
-
 
 </script>
 </body>
