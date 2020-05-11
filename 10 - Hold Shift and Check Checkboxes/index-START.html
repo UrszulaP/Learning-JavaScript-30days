@@ -114,20 +114,21 @@
     }
   );
   
-  checkboxArr.forEach(checkbox => {checkbox.addEventListener("change", saveLast2Changed)});
+  checkboxArr.forEach(checkbox => checkbox.addEventListener("change", () => {
+    saveLast2Changed();
+    checkAllBetween()
+  }));
   
   function saveLast2Changed() {
     if (this.checked) {
       lastChangedCheckbox = nowChangedCheckbox;
       nowChangedCheckbox = this;
-    } else { // prevent checkAllBetween if last unchecked
+    } else { // prevents checkAllBetween if last changed checkbox was unchecked
       lastChangedCheckbox = undefined;
       nowChangedCheckbox = undefined;
     }
   }
-  
-  checkboxArr.forEach(checkbox => checkbox.addEventListener("change", checkAllBetween));
-  
+    
   function checkAllBetween() {
     if (isShiftPressed && lastChangedCheckbox != undefined) {
       let startIndex; // not defined in if block, because it would have scope only of this if block
