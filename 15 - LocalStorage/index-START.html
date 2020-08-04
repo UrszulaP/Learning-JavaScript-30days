@@ -28,7 +28,47 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+  
+  function addItem(e) {
+    e.preventDefault();  // prevents from default behavior - reloading the page
+    const text = (this.querySelector('[name=item]')).value;  // this = form
+    const item = {
+      text,  // ES6 syntax = text: text;
+      done: false
+    }
+    items.push(item);
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items));  // must pass a string, not object like an array
+    this.reset();
+  }
+  
+  function populateList(plates = [], platesList) {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+        <li>
+          <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
+          <label for="item${i}">${plate.text}</label>
+        </li>
+      `
+    }).join('');  // joins our array items into one html string
+  }
+  
+  // not possible to addEventListeners on <input> elements since its` list is changing
+  function toggleDone(e) {
+    if(!e.target.matches('input')) return;  // skip clicks on not input
+    const el = e.target;  // element that is clicked (<input>)
+    const index = el.dataset.index;
+    items[index].done = !items[index].done;  // <li> elements are in the same order as in items array so indexes are equal
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);  // unnecessary?
+  }
+  
+  addItems.addEventListener('submit', addItem);
+  itemsList.addEventListener('click', toggleDone);
+  
+  // populate initial list from the localStorage
+  populateList(items, itemsList);
 
 </script>
 
