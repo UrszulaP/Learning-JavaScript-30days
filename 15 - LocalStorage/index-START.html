@@ -23,7 +23,15 @@
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
+    
+    <div class="buttons">
+      <button id="clear" type="button">Clear</button>
+      <button id="checkAll" type="button">Check all</button>
+      <button id="uncheckAll" type="button">Unheck all</button>
+    </div>
   </div>
+
+
 
 <script>
   const addItems = document.querySelector('.add-items');
@@ -31,16 +39,16 @@
   const items = JSON.parse(localStorage.getItem('items')) || [];
   
   function addItem(e) {
-    e.preventDefault();  // prevents from default behavior - reloading the page
-    const text = (this.querySelector('[name=item]')).value;  // this = form
+    e.preventDefault();  // prevents from default behavior - reloading the page after form submit
+    const text = (this.querySelector('[name=item]')).value;  // this = form (el that has eventListener on)
     const item = {
-      text,  // ES6 syntax = text: text;
+      text,  // ES6 syntax, = text: text;
       done: false
     }
     items.push(item);
     populateList(items, itemsList);
     localStorage.setItem('items', JSON.stringify(items));  // must pass a string, not object like an array
-    this.reset();
+    this.reset();  // reset form
   }
   
   function populateList(plates = [], platesList) {
@@ -70,6 +78,36 @@
   // populate initial list from the localStorage
   populateList(items, itemsList);
 
+
+
+  // ADDITIONAL FEATURES
+
+  const clearBtn = document.getElementById('clear');
+  const checkAllBtn = document.getElementById('checkAll');
+  const uncheckAllBtn = document.getElementById('uncheckAll');
+  
+  clearBtn.addEventListener('click', clear);
+  checkAllBtn.addEventListener('click', checkAll);
+  uncheckAllBtn.addEventListener('click', uncheckAll);
+  
+  function clear() {
+    items.splice(0, items.length);
+    localStorage.clear();
+    populateList(items, itemsList);
+  }
+  
+  function checkAll() {
+    items.forEach(item => item.done = true);
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+  
+  function uncheckAll() {
+    items.forEach(item => item.done = false);
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+  
 </script>
 
 
