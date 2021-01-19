@@ -57,15 +57,10 @@ document.getElementById('bands').innerHTML =
 
 
 function compareWithoutArticles(a, b) {
-  if (cutArticle(a) < cutArticle(b)) {
-    return -1;
-  }
-  if (cutArticle(a) > cutArticle(b)) {
-    return 1;
-  }
-  return 0;
+  return cutArticle(a) < cutArticle(b) ? -1 : 1;
 }
 
+// my solution
 function cutArticle(text) {
   const textWords = text.split(' ');  // (/[\s]+/' ')
   if (articles.includes(textWords[0])) {
@@ -74,6 +69,11 @@ function cutArticle(text) {
   } else {
     return text;
   }
+}
+
+// official solution
+function cutArticleWithRegex(text) {
+  return text.replace(/^(a |the |an )/i, '').trim();  // i - case insensitive
 }
 
 
