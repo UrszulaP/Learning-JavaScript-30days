@@ -10,9 +10,31 @@
   </div>
 
 <script>
-  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; // for different browsers
+  const recognition = new SpeechRecognition();
+  recognition.interimResults = true; // false - must stop speaking to get results; true - results on the fly
+  
+  const words = document.querySelector('.words');
+  
+  recognition.addEventListener('result', e => {
+    const transcript = Array.from(e.results)
+      .map(result => result[0].transcript)
+      .join('')
+      console.log(transcript);
+      
+      if (e.results[0].isFinal) {
+        const p = document.createElement('p');
+        p.textContent = transcript;
+        words.appendChild(p);
 
-
+        if (transcript.includes('piesek')) {
+          window.open('https://hauever.pl/wp-content/uploads/2021/02/pexels-helena-lopes-2253275-scaled.jpg','_blank');
+        }
+      }
+  });
+  
+  recognition.addEventListener('end', recognition.start);
+  recognition.start();
 </script>
 
 
