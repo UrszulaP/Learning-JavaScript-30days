@@ -40,9 +40,34 @@
   }
 </style>
 
-<button></button>
+<button>Click</button>
+
+
 <script>
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+  
+  function logText(e) {
+    console.log(this.classList.value);
+    // e.stopPropagation(); // stops event bubbling, stops on the lowest one ('three') / highest ('one') when caputre: true
+  }
+  
+  // document.body.addEventListener('click', logText);
+
+  divs.forEach(div => div.addEventListener('click', logText)); // bubble up by default
+  // divs.forEach(div => div.addEventListener('click', logText, {
+  //   capture: true, // reverts order of events caputre (bubble down instead of bubble up)
+  //   once: true // removes event listener after first run
+  // }));
+  
+  button.addEventListener('click', () => {
+    console.log('Click!!!');
+  }, {
+    once: true
+  });
+  
 
 </script>
+
 </body>
 </html>
